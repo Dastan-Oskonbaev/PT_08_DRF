@@ -28,5 +28,6 @@ swagger_patterns = [
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include(swagger_patterns))
+    path('api/v1/', include(swagger_patterns)),
+    path('menu/', include('apps.menu.urls')),
 ]
