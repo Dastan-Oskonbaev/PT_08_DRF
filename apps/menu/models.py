@@ -1,4 +1,7 @@
 from django.db import models
+from rest_framework.exceptions import ValidationError
+
+from apps.users.models import CustomUser
 
 
 class Category(models.Model):
@@ -36,3 +39,32 @@ class Article(models.Model):
     class Meta:
         verbose_name = 'Article'
         verbose_name_plural = 'Articles'
+
+    def clean(self):
+        if 'dummy' in self.title:
+            raise ValidationError("Don't use this word for title")
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Tag'
+        verbose_name_plural = 'Tags'
+
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    tags = models.ManyToManyField(Tag)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Post'
+        verbose_name_plural = 'Posts'

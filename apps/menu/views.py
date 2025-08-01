@@ -2,9 +2,10 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
-from apps.menu.models import Article
-from apps.menu.serializers import ArticleSerializer
+from apps.menu.models import Article, Post, Product
+from apps.menu.serializers import ArticleSerializer, PostSerializer, ProductWriteSerializer, ProductReadSerializer
 
 
 class HelloView(APIView):
@@ -50,3 +51,27 @@ class ArticleDetailView(generics.RetrieveAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = [AllowAny]
+
+
+class PostListView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [AllowAny]
+
+
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()
+    permission_classes = [AllowAny]
+
+    def get_serializer_class(self):
+        if self.action in ['post', 'create', 'update', 'partial_update']:
+            return ProductWriteSerializer
+        return ProductReadSerializer
+
+
+class ArticleViewSet(ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    permission_classes = [AllowAny]
+
+
