@@ -20,6 +20,8 @@ from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 
+
+
 swagger_patterns = [
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
@@ -30,4 +32,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(swagger_patterns)),
     path('menu/', include('apps.menu.urls')),
+    path('auth/', include('apps.users.urls')),
 ]

@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -44,7 +44,7 @@ class ArticleListView(generics.ListAPIView):
 
 class ArticleCreateView(generics.CreateAPIView):
     serializer_class = ArticleSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 class ArticleDetailView(generics.RetrieveAPIView):

@@ -1,3 +1,32 @@
 from django.shortcuts import render
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-# Create your views here.
+from apps.users.serializers import RegisterSerializer, LoginSerializer
+
+
+# class RegisterView(APIView):
+#     permission_classes = [AllowAny]
+#     def post(self, request):
+#         serializer = RegisterSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=201)
+#         return Response(serializer.errors, status=400)
+
+class RegisterView(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = RegisterSerializer
+
+
+class LoginView(APIView):
+    serializer_class = LoginSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
