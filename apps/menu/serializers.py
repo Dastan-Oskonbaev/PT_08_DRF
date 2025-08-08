@@ -7,8 +7,14 @@ from apps.users.models import CustomUser
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = '__all__'
+        fields = (
+            'id', 'title', 'description'
+        )
         # fields = ('id', 'title')
+
+    def create(self, validated_data):
+        validated_data['owner'] = self.context['request'].user
+        return super().create(validated_data)
 
     def validate_title(self, value):
         if 'dummy' in value:

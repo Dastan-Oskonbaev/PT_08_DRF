@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from apps.menu.views import HelloView, ArticleView, ArticleListView, ArticleCreateView, ArticleDetailView, PostListView, \
-    ProductViewSet, ArticleViewSet
+    ProductViewSet, ArticleViewSet, ArticleDeleteView
 
 router = DefaultRouter()
 router.register('products', ProductViewSet)
@@ -17,5 +17,6 @@ urlpatterns = [
     path('article-create/', ArticleCreateView.as_view(), name='article-create'),
     path('article-detail/<int:pk>', ArticleDetailView.as_view(), name='article-detail'),
     path('post/list/', PostListView.as_view(), name='posts-list'),
+    path('article/delete/<int:pk>', ArticleDeleteView.as_view(), name='article-delete'),
     *router.urls,
 ]

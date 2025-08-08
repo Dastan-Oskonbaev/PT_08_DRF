@@ -1,10 +1,11 @@
 from rest_framework import generics
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from apps.menu.models import Article, Post, Product
+from apps.menu.permissions import IsOwner
 from apps.menu.serializers import ArticleSerializer, PostSerializer, ProductWriteSerializer, ProductReadSerializer
 
 
@@ -47,6 +48,11 @@ class ArticleCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
 
+class ArticleDeleteView(generics.DestroyAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    permission_classes = [IsOwner]
+
 class ArticleDetailView(generics.RetrieveAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
@@ -56,7 +62,7 @@ class ArticleDetailView(generics.RetrieveAPIView):
 class PostListView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class ProductViewSet(ModelViewSet):
