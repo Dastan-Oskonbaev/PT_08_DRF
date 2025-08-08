@@ -1,9 +1,11 @@
-from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics, filters
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from apps.menu.filters import ProductFilter
 from apps.menu.models import Article, Post, Product
 from apps.menu.permissions import IsOwner
 from apps.menu.serializers import ArticleSerializer, PostSerializer, ProductWriteSerializer, ProductReadSerializer
@@ -63,11 +65,16 @@ class PostListView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['title']
+    filterset_fields = ['tags__name']
 
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     permission_classes = [AllowAny]
+    filterset_class = ProductFilter
+
 
     def get_serializer_class(self):
         if self.action in ['post', 'create', 'update', 'partial_update']:
